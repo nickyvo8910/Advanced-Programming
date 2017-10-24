@@ -62,23 +62,35 @@ int date_compare(Date *date1, Date *date2){
  * date_destroy returns any storage associated with `d' to the system
  */
 void date_destroy(Date *d){
+	//d = (Date *) realloc(d, sizeof(Date)-(sizeof(__int64)));
+	//free(&((*d).day));
+	//free(&((*d).month));
+	//free(&((*d).year));
 	free(d);
+}
+
+void to_string(Date *d){
+	printf("Day : %d, Month : %d, Year : %d \n",d->day,d->month,d->year);
 }
 
 int main(int argc, char *argv[]) {
         Date *testDay = NULL;
         testDay = date_create("20/10/2017");
-        printf("Day : %d",testDay->day);
-        printf("Month : %d",testDay->month);
-        printf("Year: %d",testDay->year);
+        to_string(testDay);
         
         Date *dupDate = date_duplicate(testDay);
-        printf("Day : %d",dupDate->day);
-        printf("Month : %d",dupDate->month);
-        printf("Year: %d",dupDate->year);
+       	to_string(dupDate);
         
         Date *laterDate = date_create("24/10/2017");
         Date *earlierDate = date_create("10/10/2017");
         printf("Later: %d",date_compare(laterDate,testDay));
         printf("Earlier: %d",date_compare(earlierDate,testDay));
+        printf("\n");
+        
+        Date *ruinedDate = date_create("24/10/2017");
+        printf("\nBefore:");
+        to_string(ruinedDate);
+        date_destroy(ruinedDate);
+        printf("\nAfter:");
+        to_string(ruinedDate);
 }

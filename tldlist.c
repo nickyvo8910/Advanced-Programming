@@ -1,11 +1,26 @@
-#ifndef _TLDLIST_H_INCLUDED_
-#define _TLDLIST_H_INCLUDED_
-#include "tldlist.c"
 #include "date.h"
 
-typedef struct tldlist TLDList;
-typedef struct tldnode TLDNode;
-typedef struct tlditerator TLDIterator;
+typedef struct tldnode{
+	struct tldnode *parrent;
+	char *content;
+	struct tldnode *leftChild;
+	struct tldnode *rightChild;
+}TLDNode;
+
+typedef struct tldlist {
+	Date *beginDate;
+	Date *endDate;
+	TLDNode *root;
+	__int64 listSize;
+	__int64 success_add;	
+}TLDList;
+
+typedef struct tlditerator {
+	TLDNode *node;
+	int i;
+	int next;
+	int sizeOfArray;
+}TLDIterator;
 
 /*
  * tldlist_create generates a list structure for storing counts against
@@ -14,7 +29,9 @@ typedef struct tlditerator TLDIterator;
  * creates a TLDList that is constrained to the `begin' and `end' Date's
  * returns a pointer to the list if successful, NULL if not
  */
-TLDList *tldlist_create(Date *begin, Date *end);
+TLDList *tldlist_create(Date *begin, Date *end){
+	TLDList *t = (TLDList *)
+}
 
 /*
  * tldlist_destroy destroys the list structure in `tld'
@@ -64,4 +81,3 @@ char *tldnode_tldname(TLDNode *node);
  */
 long tldnode_count(TLDNode *node);
 
-#endif /* _TLDLIST_H_INCLUDED_ */
