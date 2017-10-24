@@ -62,9 +62,11 @@ int date_compare(Date *date1, Date *date2){
  * date_destroy returns any storage associated with `d' to the system
  */
 void date_destroy(Date *d){
-	//d = (Date *) realloc(d, sizeof(Date)-(sizeof(__int64)));
-
-	free(d);
+   //d = (Date *) realloc(d, sizeof(Date)-(sizeof(__int64)));
+        free(d->day);
+        free(d->month);
+        free(d->year);
+        free(d);
 }
 
 void to_string(Date *d){
