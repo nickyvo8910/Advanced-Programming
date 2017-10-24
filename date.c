@@ -63,9 +63,7 @@ int date_compare(Date *date1, Date *date2){
  */
 void date_destroy(Date *d){
 	//d = (Date *) realloc(d, sizeof(Date)-(sizeof(__int64)));
-	free(&((*d).day));
-	free(&((*d).month));
-	free(&((*d).year));
+
 	free(d);
 }
 
