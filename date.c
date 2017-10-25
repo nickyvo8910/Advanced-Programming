@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
+#define MAX_DATE_STRING_FORMAT 200 //LEAK ???
 
 typedef struct date {
 	int day;
@@ -66,28 +67,49 @@ void date_destroy(Date *d){
 	free(d);
 }
 
-void to_string(Date *d){
-	printf("Day : %d, Month : %d, Year : %d \n",d->day,d->month,d->year);
+char* date_to_string(Date *d){
+	char *dayStr[2];
+	char *monthStr[2];
+	char *yearStr[4];
+	itoa((*d).day,dayStr,10);// 10 as base10
+	itoa((*d).month,monthStr,10);
+	itoa((*d).year,yearStr,10);
+	
+	
+	char *rtnStr[MAX_DATE_STRING_FORMAT];
+	strcpy(rtnStr, "Day: ");
+	strcat(rtnStr,dayStr);
+	strcat(rtnStr,", Month: ");
+	strcat(rtnStr,monthStr);
+	strcat(rtnStr,", Year: ");
+	strcat(rtnStr,yearStr);
+	return rtnStr;
 }
 
-int main(int argc, char *argv[]) {
+/*
+
+void main(int argc, char *argv[]) {
         Date *testDay = NULL;
         testDay = date_create("20/10/2017");
-        to_string(testDay);
+        printf("\n");
+        printf(date_to_string(testDay));
+        printf("\n");
         
         Date *dupDate = date_duplicate(testDay);
-       	to_string(dupDate);
+       	printf(date_to_string(dupDate));
+       	printf("\n");
         
         Date *laterDate = date_create("24/10/2017");
         Date *earlierDate = date_create("10/10/2017");
         printf("Later: %d",date_compare(laterDate,testDay));
+        printf("\n");
         printf("Earlier: %d",date_compare(earlierDate,testDay));
         printf("\n");
         
         Date *ruinedDate = date_create("24/10/2010");
         printf("\nBefore:");
-        to_string(ruinedDate);
+        printf(date_to_string(ruinedDate));
         date_destroy(ruinedDate);
         printf("\nAfter:");
-        to_string(ruinedDate);
-}
+        printf(date_to_string(ruinedDate));
+}*/
