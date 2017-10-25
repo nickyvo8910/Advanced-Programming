@@ -1,8 +1,13 @@
 #include "date.h"
 
+typedef struct tldNodeEntry{
+	char *tldString;
+	long tldCount;
+}NodeEntry;
+
 typedef struct tldnode{
 	struct tldnode *parrent;
-	char *tldString;
+	NodeEntry *nodeEntry;
 	struct tldnode *leftChild;
 	struct tldnode *rightChild;
 }TLDNode;
@@ -11,8 +16,8 @@ typedef struct tldlist {
 	Date *beginDate;
 	Date *endDate;
 	TLDNode *root;
-	__int64 listSize;
-	__int64 success_add;	
+	long listSize;
+	long success_add;	
 }TLDList;
 
 typedef struct tlditerator {
@@ -61,42 +66,61 @@ void tldlist_destroy(TLDList *tld){
 int tldlist_add(TLDList *tld, char *hostname, Date *d){
 	//check d
 	//add to tree
-	if (tld->listSize == 0 ) {
+	int dateChk = date_compare(tld->beginDate,d)*date_compare(tld->endDate,d);
+	if(!dateChk >0){// if date is in range
+		if (tld->listSize == 0 ) { // insert first node
+		
 			TLDNode *newNode = (TLDNode *) malloc(sizeof(TLDNode));
 			newNode->parrent =NULL;
-			newNode->tldString = hostname;
+			
+			NodeEntry *entry = (NodeEntry *)malloc(sizeof(NodeEntry));
+			entry->tldString =hostname;
+			entry->tldCount =1;
+			
+			newNode->nodeEntry = entry;
 			newNode->leftChild =NULL;
 			newNode->rightChild =NULL;
 			tld->root = newNode;
-			size = 1;
+			tld->listSize = 1;
+			tld->success_add =1;
 	return 1;
-		} else return insert_bin(tld, hostname,d,root);
+		} else return insert_bin(tld, hostname,d,tld->root); // insert leaf node
+	}else{
+		return 0; // out of date range
+	}
+	
 }
 
-int insert_bin(TLDList *tld, char *hostname, Date *d, TLDNode *root){
-	if (!(s.compareTo(node.toString()) ==0) ) {
-			if (s.compareTo(node.toString()) < 0) {
-				if (node.hasLeft())
-					insert(s, node.getLeft());
-				else {
-					node.setLeft(new Node(s, null, null, node));
-					size++;
-				}
-			} else {
-				if(node.hasRight()) insert (s,node.getRight());
-				else{
-					node.setRight(new Node(s,null,null,node));
-					size++;
-				}
-			}
-		}else return 0;//System.out.println("Duplicated string");
+int insert_bin(TLDList *tld, char *hostname, Date *d, TLDNode *node){
+	//no need to check date
+	//compare string with the ROOTNODE
+		//key = Node->entry->tldString 
+		//if string != Node->entry->tldString
+			//if string < KEY
+				//if ROOTNODE has left
+					//insert to left
+				//else
+					//ROOTNODE -> left = NEWNODE
+					//LIST size ++;
+					//LIST add ++;
+			//if string >KEY
+				//if ROOT has right
+					//insert right
+				//else
+					//ROOTNODE -> right = NEWNODE
+					//LIST size ++;
+					//LIST add ++;
+		// Node -> entry ->count ++; 
+						////LIST add ++;
 }
 
 /*
  * tldlist_count returns the number of successful tldlist_add() calls since
  * the creation of the TLDList
  */
-long tldlist_count(TLDList *tld);
+long tldlist_count(TLDList *tld){
+	return (tld->success_add);
+}
 
 /*
  * tldlist_iter_create creates an iterator over the TLDList; returns a pointer
@@ -118,11 +142,17 @@ void tldlist_iter_destroy(TLDIterator *iter);
 /*
  * tldnode_tldname returns the tld associated with the TLDNode
  */
-char *tldnode_tldname(TLDNode *node);
+char *tldnode_tldname(TLDNode *node){
+	//Look for Node
+	//return (node->nodeEntry->tldString);
+}
 
 /*
  * tldnode_count returns the number of times that a log entry for the
  * corresponding tld was added to the list
  */
-long tldnode_count(TLDNode *node);
+long tldnode_count(TLDNode *node){
+	//Look for Node
+	//return (node->nodeEntry->tldCount);
+}
 
