@@ -1,4 +1,5 @@
 #include "date.h"
+#define MAX_TLD_STRINGLENGTH = 30
 
 typedef struct tldNodeEntry{
 	char *tldString;
@@ -112,6 +113,11 @@ int insert_bin(TLDList *tld, char *hostname, Date *d, TLDNode *node){
 					//LIST add ++;
 		// Node -> entry ->count ++; 
 						////LIST add ++;
+	char *keyString = (char*)malloc(sizeof(MAX_TLD_STRINGLENGTH));
+	keyString = node->nodeEntry->tldString;
+	
+	int compareResult = strcmp(hostname, keyString);
+	
 }
 
 /*
