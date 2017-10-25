@@ -151,6 +151,10 @@ int tldlist_add(TLDList *tld, char *hostname, Date *d)
 {
     //check d
     //add to tree
+    //refine hostname
+    char *newHost = //lastoccr
+    //if newHost !=Null --> move forwards
+    //use newHost
     int dateChk = date_compare(tld->beginDate,d)*date_compare(tld->endDate,d);
     if(dateChk <0 || dateChk ==0) // if date is in range
     {
