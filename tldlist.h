@@ -1,6 +1,6 @@
 #ifndef _TLDLIST_H_INCLUDED_
 #define _TLDLIST_H_INCLUDED_
-#include "tldlist.c"
+
 #include "date.h"
 
 
@@ -11,7 +11,7 @@
  * creates a TLDList that is constrained to the `begin' and `end' Date's
  * returns a pointer to the list if successful, NULL if not
  */
-TLDList *tldlist_create(Date *begin, Date *end)
+TLDList *tldlist_create(Date *begin, Date *end);
 
 /*
  * tldlist_destroy destroys the list structure in `tld'
