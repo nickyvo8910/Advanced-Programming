@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
+#include <ctype.h>
 #define MAX_TLD_STRINGLENGTH 30
 
 typedef struct tldNodeEntry
@@ -108,9 +109,11 @@ int insert_bin(TLDList *tld, char *hostname, Date *d, TLDNode *node)
 				
 				NodeEntry *entry = (NodeEntry *)malloc(sizeof(NodeEntry));
 				//assign tldString
-				entry->tldString = malloc(sizeof(hostname));				
-				for(int i=0; i<strlen(hostname);i++){
-					entry->tldString[i] = tolower(hostname[i]]);
+				entry->tldString = malloc(sizeof(hostname));
+				unsigned forIndex;
+				for(forIndex=0; forIndex<strlen(hostname);forIndex++){
+					(*entry).tldString[forIndex] = tolower(hostname[forIndex]);
+					//entry->tldString[forIndex] = tolower(hostname[forIndex]]);
 				}
 			
 				entry->tldCount = 1;
@@ -132,9 +135,10 @@ int insert_bin(TLDList *tld, char *hostname, Date *d, TLDNode *node)
 				
 				NodeEntry *entry = (NodeEntry *)malloc(sizeof(NodeEntry));
 				//assign tldString
-				entry->tldString = malloc(sizeof(hostname));				
-				for(int i=0; i<strlen(hostname);i++){
-					entry->tldString[i] = tolower(hostname[i]]);
+				entry->tldString = malloc(sizeof(hostname));
+				unsigned forIndex;			
+				for(forIndex=0; forIndex<strlen(hostname);forIndex++){
+					entry->tldString[forIndex] = tolower(hostname[forIndex]);
 				}
 				
 				entry->tldCount = 1;
@@ -185,9 +189,10 @@ int tldlist_add(TLDList *tld, char *hostname, Date *d)
 				
 				
 				//assign tldString
-				entry->tldString = malloc(sizeof(newHost));				
-				for(int i=0; i<strlen(newHost);i++){
-					entry->tldString[i] = tolower(newHost[i]]);
+				entry->tldString = malloc(sizeof(newHost));
+				unsigned forIndex;			
+				for(forIndex=0; forIndex<strlen(newHost);forIndex++){
+					entry->tldString[forIndex] = tolower(newHost[forIndex]);
 				}
 				
 				
@@ -221,10 +226,6 @@ long tldlist_count(TLDList *tld)
 void travese(TLDNode *node,TLDIterator *it){
 	if(node != NULL){
 		it->nodes[it->i++] = *node;
-		/*
-printf("\n");
-		printf("Crr Node: %s",node->nodeEntry->tldString);
-		printf("\n");*/
 		if(node->leftChild !=NULL){
 			travese(node->leftChild, it);
 		}
