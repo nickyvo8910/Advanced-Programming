@@ -107,8 +107,12 @@ int insert_bin(TLDList *tld, char *hostname, Date *d, TLDNode *node)
 				newNode->parrent = node;
 				
 				NodeEntry *entry = (NodeEntry *)malloc(sizeof(NodeEntry));
-			//	entry->tldString = (char *)malloc(sizeof(MAX_TLD_STRINGLENGTH));
-				entry->tldString = hostname;
+				//assign tldString
+				entry->tldString = malloc(sizeof(hostname));				
+				for(int i=0; i<strlen(hostname);i++){
+					entry->tldString[i] = tolower(hostname[i]]);
+				}
+			
 				entry->tldCount = 1;
 				
 				newNode->nodeEntry = entry;
@@ -127,7 +131,12 @@ int insert_bin(TLDList *tld, char *hostname, Date *d, TLDNode *node)
 				newNode->parrent = node;
 				
 				NodeEntry *entry = (NodeEntry *)malloc(sizeof(NodeEntry));
-				entry->tldString = hostname;
+				//assign tldString
+				entry->tldString = malloc(sizeof(hostname));				
+				for(int i=0; i<strlen(hostname);i++){
+					entry->tldString[i] = tolower(hostname[i]]);
+				}
+				
 				entry->tldCount = 1;
 				
 				newNode->nodeEntry = entry;
@@ -173,7 +182,15 @@ int tldlist_add(TLDList *tld, char *hostname, Date *d)
 				newNode->parrent = NULL;
 
 				NodeEntry *entry = (NodeEntry *)malloc(sizeof(NodeEntry));
-				entry->tldString = newHost;
+				
+				
+				//assign tldString
+				entry->tldString = malloc(sizeof(newHost));				
+				for(int i=0; i<strlen(newHost);i++){
+					entry->tldString[i] = tolower(newHost[i]]);
+				}
+				
+				
 				entry->tldCount =1;
 
 				newNode->nodeEntry = entry;
@@ -204,9 +221,10 @@ long tldlist_count(TLDList *tld)
 void travese(TLDNode *node,TLDIterator *it){
 	if(node != NULL){
 		it->nodes[it->i++] = *node;
-		printf("\n");
+		/*
+printf("\n");
 		printf("Crr Node: %s",node->nodeEntry->tldString);
-		printf("\n");
+		printf("\n");*/
 		if(node->leftChild !=NULL){
 			travese(node->leftChild, it);
 		}
