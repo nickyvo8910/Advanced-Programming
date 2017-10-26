@@ -1,8 +1,13 @@
+//APH Exercise 1
+//Student Name : Nhut Minh Vo
+//Student ID: 2253715v
+
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
 #include "date.h"
-#define MAX_DATE_STRING_FORMAT 200 //LEAK ???
+
+//#define MAX_DATE_STRING_FORMAT 200
 
 struct date {
 	int day;

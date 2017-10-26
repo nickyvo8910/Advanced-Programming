@@ -1,3 +1,7 @@
+//APH Exercise 1
+//Student Name : Nhut Minh Vo
+//Student ID: 2253715v
+
 #include "tldlist.h"
 #include <stdio.h>
 #include <string.h>
@@ -281,7 +285,6 @@ void tldlist_iter_destroy(TLDIterator *iter){
  */
 char *tldnode_tldname(TLDNode *node)
 {
-	//Look for node
     return (node->nodeEntry->tldString);
 }
 
@@ -291,7 +294,6 @@ char *tldnode_tldname(TLDNode *node)
  */
 long tldnode_count(TLDNode *node)
 {
-	//Look for node
     return (node->nodeEntry->tldCount);
 }
 /*
