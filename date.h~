@@ -31,3 +31,4 @@ int date_compare(Date *date1, Date *date2);
 void date_destroy(Date *d);
 
 #endif /* _DATE_H_INCLUDED_ */
+

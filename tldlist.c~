@@ -143,6 +143,7 @@ int insert_bin(TLDList *tld, char *hostname, Date *d, TLDNode *node)
     	tld->success_add +=1;
 		return 1;  
 		}
+	return 0;
 }
 
 /*
