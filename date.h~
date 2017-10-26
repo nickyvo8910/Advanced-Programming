@@ -1,7 +1,7 @@
 #ifndef _DATE_H_INCLUDED_
 #define _DATE_H_INCLUDED_
-#include "date.c"
 
+typedef struct date Date;
 
 /*
  * date_create creates a Date structure from `datestr`

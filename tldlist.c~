@@ -1,5 +1,7 @@
-#include "date.h"
+#include "tldlist.h"
+#include <stdio.h>
 #include <string.h>
+#include <stdlib.h>
 #define MAX_TLD_STRINGLENGTH 30
 
 typedef struct tldNodeEntry

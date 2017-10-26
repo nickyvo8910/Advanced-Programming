@@ -1,8 +1,11 @@
 #ifndef _TLDLIST_H_INCLUDED_
 #define _TLDLIST_H_INCLUDED_
-#include "tldlist.c"
+
 #include "date.h"
 
+typedef struct tldlist TLDList;
+typedef struct tldnode TLDNode;
+typedef struct tlditerator TLDIterator;
 
 /*
  * tldlist_create generates a list structure for storing counts against
