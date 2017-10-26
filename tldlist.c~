@@ -1,4 +1,5 @@
 #include "date.h"
+#include <string.h>
 #define MAX_TLD_STRINGLENGTH 30
 
 typedef struct tldNodeEntry
@@ -26,10 +27,10 @@ typedef struct tldlist
 
 typedef struct tlditerator
 {
-    TLDNode *node;
-    int i;
-    int next;
-    int sizeOfArray;
+    TLDNode *nodes; //list of Nodes
+    unsigned long i;
+    unsigned long next;
+    unsigned long sizeOfArray;
 } TLDIterator;
 
 /*
@@ -68,26 +69,27 @@ void tldlist_destroy(TLDList *tld)
 
 int insert_bin(TLDList *tld, char *hostname, Date *d, TLDNode *node)
 {
-    //no need to check date
-    //compare string with the ROOTNODE
-    //key = Node->entry->tldString
-    //if string != Node->entry->tldString
-    	//if string < KEY
-    		//if ROOTNODE has left
-    		//insert to left
-    	//else
-    		//ROOTNODE -> left = NEWNODE
-    		//LIST size ++;
-    		//LIST add ++;
-    	//if string >KEY
-    		//if ROOT has right
-    			//insert right
-    		//else
-    			//ROOTNODE -> right = NEWNODE
-    			//LIST size ++;
-    			//LIST add ++;
-    	// Node -> entry ->count ++;
-    	////LIST add ++;
+    /*no need to check date
+    compare string with the ROOTNODE
+    key = Node->entry->tldString
+    if string != Node->entry->tldString
+    	if string < KEY
+    		if ROOTNODE has left
+    		insert to left
+    	else
+    		ROOTNODE -> left = NEWNODE
+    		LIST size ++;
+    		LIST add ++;
+    	if string >KEY
+    		if ROOT has right
+    			insert right
+    		else
+    			ROOTNODE -> right = NEWNODE
+    			LIST size ++;
+    			LIST add ++;
+    	 Node -> entry ->count ++;
+		LIST add ++;
+		*/
     char keyStr[MAX_TLD_STRINGLENGTH];
     strcpy(keyStr, node->nodeEntry->tldString);
 
@@ -103,6 +105,7 @@ int insert_bin(TLDList *tld, char *hostname, Date *d, TLDNode *node)
 				newNode->parrent = node;
 				
 				NodeEntry *entry = (NodeEntry *)malloc(sizeof(NodeEntry));
+			//	entry->tldString = (char *)malloc(sizeof(MAX_TLD_STRINGLENGTH));
 				entry->tldString = hostname;
 				entry->tldCount = 1;
 				
@@ -149,40 +152,39 @@ int insert_bin(TLDList *tld, char *hostname, Date *d, TLDNode *node)
  */
 int tldlist_add(TLDList *tld, char *hostname, Date *d)
 {
-    //check d
-    //add to tree
-    //refine hostname
-    char *newHost = //lastoccr
-    //if newHost !=Null --> move forwards
-    //use newHost
+    //check the date
     int dateChk = date_compare(tld->beginDate,d)*date_compare(tld->endDate,d);
     if(dateChk <0 || dateChk ==0) // if date is in range
     {
-        if (tld->listSize == 0 )   // insert first node
-        {
+		//refine hostname
+		char *newHost = strrchr(hostname,'.');  //last occurrence 
+		
+		if(newHost !=NULL){						// valid hostname
+			newHost +=1; 						// move forwards
+			
+			//use *newHost instead of hostname from now on
+			if (tld->listSize == 0 )   // insert first node
+			{
 
-            TLDNode *newNode = (TLDNode *) malloc(sizeof(TLDNode));
-            newNode->parrent = NULL;
+				TLDNode *newNode = (TLDNode *) malloc(sizeof(TLDNode));
+				newNode->parrent = NULL;
 
-            NodeEntry *entry = (NodeEntry *)malloc(sizeof(NodeEntry));
-            entry->tldString = hostname;
-            entry->tldCount =1;
+				NodeEntry *entry = (NodeEntry *)malloc(sizeof(NodeEntry));
+				entry->tldString = newHost;
+				entry->tldCount =1;
 
-            newNode->nodeEntry = entry;
-            newNode->leftChild =NULL;
-            newNode->rightChild =NULL;
-            tld->root = newNode;
-            tld->listSize = 1;
-            tld->success_add =1;
-            return 1;
-        }
-        else return insert_bin(tld, hostname,d,tld->root);   // insert leaf node
-    }
-    else
-    {
-        return 0; // out of date range
-    }
-
+				newNode->nodeEntry = entry;
+				newNode->leftChild =NULL;
+				newNode->rightChild =NULL;
+				tld->root = newNode;
+				tld->listSize = 1;
+				tld->success_add =1;
+				return 1;
+			}
+			else return insert_bin(tld, newHost,d,tld->root);   // insert leaf node
+		}else return 0; // invalid hostname
+	}
+    else return 0; // out of date range
 }
 
 
@@ -195,30 +197,70 @@ long tldlist_count(TLDList *tld)
     return (tld->success_add);
 }
 
+
+void travese(TLDNode *node,TLDIterator *it){
+	if(node != NULL){
+		it->nodes[it->i++] = *node;
+		printf("\n");
+		printf("Crr Node: %s",node->nodeEntry->tldString);
+		printf("\n");
+		if(node->leftChild !=NULL){
+			travese(node->leftChild, it);
+		}
+		if(node->rightChild	 !=NULL){
+			travese(node->rightChild, it);
+		}
+	}
+	
+	return;
+}
 /*
  * tldlist_iter_create creates an iterator over the TLDList; returns a pointer
  * to the iterator if successful, NULL if not
  */
-TLDIterator *tldlist_iter_create(TLDList *tld);
+TLDIterator *tldlist_iter_create(TLDList *tld){
+	
+	TLDIterator *it = malloc(sizeof(TLDIterator));
+
+	if (it != NULL && tld != NULL) {
+		it->sizeOfArray = tld->listSize;
+		it->next = 0;
+		it->i =0;		
+		it->nodes = malloc(sizeof(TLDNode)*(tld->listSize));
+		travese(tld->root, it);
+	}else{
+		it =NULL;
+	}
+	return it;
+}
 
 /*
  * tldlist_iter_next returns the next element in the list; returns a pointer
  * to the TLDNode if successful, NULL if no more elements to return
  */
-TLDNode *tldlist_iter_next(TLDIterator *iter);
+TLDNode *tldlist_iter_next(TLDIterator *iter){
+	TLDNode *crrNode;
+	if(iter->next < iter->sizeOfArray){
+		crrNode = &(iter->nodes[iter->next ++]);
+		return crrNode;
+	}else return NULL;
+}
 
 /*
  * tldlist_iter_destroy destroys the iterator specified by `iter'
  */
-void tldlist_iter_destroy(TLDIterator *iter);
+void tldlist_iter_destroy(TLDIterator *iter){
+	free(iter->nodes);
+	free(iter);
+}
 
 /*
  * tldnode_tldname returns the tld associated with the TLDNode
  */
 char *tldnode_tldname(TLDNode *node)
 {
-    //Look for Node
-    //return (node->nodeEntry->tldString);
+	//Look for node
+    return (node->nodeEntry->tldString);
 }
 
 /*
@@ -227,9 +269,10 @@ char *tldnode_tldname(TLDNode *node)
  */
 long tldnode_count(TLDNode *node)
 {
-    //Look for Node
-    //return (node->nodeEntry->tldCount);
+	//Look for node
+    return (node->nodeEntry->tldCount);
 }
+/*
 void main(int argc, char *argv[]){
 	Date *fromDate = NULL;
  	fromDate = date_create("20/10/2017");
@@ -253,7 +296,7 @@ void main(int argc, char *argv[]){
   	printf("List Added: %d",t->success_add);	
   	printf("\n");
   	
-  	/*
+  	
 
   	//test ListDestroy
   	printf("\n***Test listDestroy ***\n");
@@ -269,20 +312,21 @@ void main(int argc, char *argv[]){
   	printf("List Size: %d",t->listSize);
   	printf("\n");
   	printf("List Added: %d",t->success_add);	
-  	printf("\n");*/
+  	printf("\n");
   	
   	//test listAdd
   	printf("\n***Test listAdd ***\n");
-	
-	tldlist_add(t,"uk",date_create("22/10/2017"));
-	tldlist_add(t,"uk",date_create("22/10/2017"));
-	tldlist_add(t,"edu",date_create("22/10/2017"));
-	tldlist_add(t,"gm",date_create("22/10/2017"));
-	tldlist_add(t,"la",date_create("22/10/2017"));
-	tldlist_add(t,"uk",date_create("22/10/2017"));
-	tldlist_add(t,"uk",date_create("22/10/2017"));
-	tldlist_add(t,"uk",date_create("22/10/2017"));
-	tldlist_add(t,"uk",date_create("22/10/2017"));
+  	
+	tldlist_add(t,"www.sdfsdf.edu",date_create("22/10/2017"));
+	tldlist_add(t,"www.asdasf.gm",date_create("22/10/2017"));
+	tldlist_add(t,"www.fsafas.la",date_create("22/10/2017"));
+	tldlist_add(t,"qq.aa.asd.pn",date_create("22/10/2017"));
+	tldlist_add(t,"www.sadasd.uk",date_create("22/10/2017"));
+	tldlist_add(t,"www.asfas.uk",date_create("22/10/2017"));	
+	tldlist_add(t,"www.dsfsd.uk",date_create("22/10/2017"));
+	tldlist_add(t,"www.wweq.uk",date_create("22/10/2017"));
+	tldlist_add(t,"www.asd.uk",date_create("22/10/2017"));
+
 	
 	
 	printf("Begin Date: ");
@@ -297,4 +341,53 @@ void main(int argc, char *argv[]){
   	printf("\n");
   	printf("List Added: %d",t->success_add);	
   	printf("\n");
-}
+  	
+  	//test listCount
+  	printf("\n***Test listCount ***\n");
+  	printf("List Count: %d",tldlist_count(t));
+  	printf("\n");
+  	
+  	//test Iter Create
+  	printf("\n***Test Iter Create ***\n");
+  	TLDIterator *it = tldlist_iter_create(t);
+  	printf("Iter is not NULL: %d", ((it != NULL)? 1 :0));
+  	printf("\n");
+	printf("Crr Index: %d",it->i);
+  	printf("\n");
+  	printf("Crr Next: %d",it->next);	
+  	printf("\n");
+  	printf("Size: %d",it->sizeOfArray);
+  	printf("\n");
+  	printf("Last Entry: %s", it->nodes->nodeEntry->tldString);
+  	printf("\n");
+  	
+  	//test Iter Next
+  	printf("\n***Test Iter Next ***\n");
+  	TLDNode *nextNode = tldlist_iter_next(it);
+  	printf("Iter is not NULL: %d", ((it != NULL)? 1 :0));
+  	printf("\n");
+	printf("Crr Index: %d",it->i);
+  	printf("\n");
+  	printf("Crr Next: %d",it->next);	
+  	printf("\n");
+  	printf("Size: %d",it->sizeOfArray);
+  	printf("\n");
+  	printf("Next Node: %s",nextNode->nodeEntry->tldString);
+  	printf("\n");
+  	
+  	//test Iter Next
+  	printf("\n***Test Iter Next ***\n");
+  	TLDNode *next2Node = tldlist_iter_next(it);
+  	printf("Iter is not NULL: %d", ((it != NULL)? 1 :0));
+  	printf("\n");
+	printf("Crr Index: %d",it->i);
+  	printf("\n");
+  	printf("Crr Next: %d",it->next);	
+  	printf("\n");
+  	printf("Size: %d",it->sizeOfArray);
+  	printf("\n");
+	printf("Next 2 Node: %s",nextNode->nodeEntry->tldString);
+  	printf("\n");
+  	
+
+}*/

@@ -66,11 +66,12 @@ int date_compare(Date *date1, Date *date2){
 void date_destroy(Date *d){
 	free(d);
 }
+/*
 
 char* date_to_string(Date *d){
-	char *dayStr[2];
-	char *monthStr[2];
-	char *yearStr[4];
+	char *dayStr[5];
+	char *monthStr[5];
+	char *yearStr[5];
 	itoa((*d).day,dayStr,10);// 10 as base10
 	itoa((*d).month,monthStr,10);
 	itoa((*d).year,yearStr,10);
@@ -84,11 +85,12 @@ char* date_to_string(Date *d){
 	strcat(rtnStr,", Year: ");
 	strcat(rtnStr,yearStr);
 	return rtnStr;
-}
+}*/
+
 
 /*
 
-void main(int argc, char *argv[]) {
+int main(int argc, char *argv[]) {
         Date *testDay = NULL;
         testDay = date_create("20/10/2017");
         printf("\n");
