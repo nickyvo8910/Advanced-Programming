@@ -67,7 +67,7 @@ void date_destroy(Date *d){
 	free(d);
 }
 
-
+/*
 char* date_to_string(Date *d){
 	char *dayStr[5];
 	char *monthStr[5];
@@ -115,4 +115,4 @@ int main(int argc, char *argv[]) {
         printf("\nAfter:");
         printf(date_to_string(ruinedDate));
 }
-
+*/
