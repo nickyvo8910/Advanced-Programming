@@ -4,36 +4,36 @@
 #include <stdlib.h>
 #define MAX_TLD_STRINGLENGTH 30
 
-typedef struct tldNodeEntry
+struct tldNodeEntry
 {
     char *tldString;
     long tldCount;
-} NodeEntry;
+};
 
-typedef struct tldnode
+struct tldnode
 {
     struct tldnode *parrent;
     NodeEntry *nodeEntry;
     struct tldnode *leftChild;
     struct tldnode *rightChild;
-} TLDNode;
+};
 
-typedef struct tldlist
+struct tldlist
 {
     Date *beginDate;
     Date *endDate;
     TLDNode *root;
     long listSize;
     long success_add;
-} TLDList;
+};
 
-typedef struct tlditerator
+struct tlditerator
 {
     TLDNode *nodes; //list of Nodes
     unsigned long i;
     unsigned long next;
     unsigned long sizeOfArray;
-} TLDIterator;
+} ;
 
 /*
  * tldlist_create generates a list structure for storing counts against

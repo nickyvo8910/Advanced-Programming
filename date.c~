@@ -4,11 +4,11 @@
 #include "date.h"
 #define MAX_DATE_STRING_FORMAT 200 //LEAK ???
 
-typedef struct date {
+struct date {
 	int day;
 	int month;
 	int year;
-}Date;
+};
 
 
 /*
