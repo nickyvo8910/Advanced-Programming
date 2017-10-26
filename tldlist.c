@@ -4,11 +4,11 @@
 #include <stdlib.h>
 #define MAX_TLD_STRINGLENGTH 30
 
-struct tldNodeEntry
+typedef struct tldNodeEntry
 {
     char *tldString;
     long tldCount;
-};
+} NodeEntry;
 
 struct tldnode
 {

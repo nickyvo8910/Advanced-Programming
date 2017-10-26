@@ -4,11 +4,11 @@
 #include <stdlib.h>
 #define MAX_TLD_STRINGLENGTH 30
 
-struct tldNodeEntry
+typedef struct tldNodeEntry
 {
     char *tldString;
     long tldCount;
-};
+} NodeEntry;
 
 struct tldnode
 {
@@ -33,7 +33,7 @@ struct tlditerator
     unsigned long i;
     unsigned long next;
     unsigned long sizeOfArray;
-} ;
+};
 
 /*
  * tldlist_create generates a list structure for storing counts against
