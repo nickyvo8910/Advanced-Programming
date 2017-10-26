@@ -1,6 +1,6 @@
 #ifndef _DATE_H_INCLUDED_
 #define _DATE_H_INCLUDED_
-
+#include "date.c"
 
 
 /*

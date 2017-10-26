@@ -66,7 +66,7 @@ int date_compare(Date *date1, Date *date2){
 void date_destroy(Date *d){
 	free(d);
 }
-/*
+
 
 char* date_to_string(Date *d){
 	char *dayStr[5];
@@ -85,10 +85,10 @@ char* date_to_string(Date *d){
 	strcat(rtnStr,", Year: ");
 	strcat(rtnStr,yearStr);
 	return rtnStr;
-}*/
+}
 
 
-/*
+
 
 int main(int argc, char *argv[]) {
         Date *testDay = NULL;
@@ -114,4 +114,4 @@ int main(int argc, char *argv[]) {
         date_destroy(ruinedDate);
         printf("\nAfter:");
         printf(date_to_string(ruinedDate));
-}*/
+}
